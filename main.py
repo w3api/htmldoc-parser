@@ -51,7 +51,7 @@ def todos_los_elementos():
 
         for atributo in atributos:
             if atributo != "globals":
-                if not atributo.startswith("on"):
+                if not atributo.strip().startswith("on"):
                     e.add_atributo(atributo.strip())
                 else:
                     e.add_evento(atributo.strip())

@@ -240,13 +240,13 @@ def doc_eventosHTML(e):
 
     basepath = e.nombre
 
-    for atributo in e.atributos:
+    for evento in e.eventos:
 
-            f = open(__OUT__ + e.nombre[0] + "/" + basepath + "/2021-01-01-" + e.nombre + "." + atributo + ".md","w")
-            clave = "HTML."+e.nombre[0]+"."+basepath + "." + atributo
-            path = "/html/"+basepath.replace(".","/") + "/" + atributo + "/"
+            f = open(__OUT__ + e.nombre[0] + "/" + basepath + "/2021-01-01-" + e.nombre + "." + evento + ".md","w")
+            clave = "HTML."+e.nombre[0]+"."+basepath + "." + evento
+            path = "/html/"+basepath.replace(".","/") + "/" + evento + "/"
             jsonsource = "HTML."+e.nombre[0]+"."+basepath.replace(".","")  # Las base JSON compuestas se accede sin punto
-            nombre = e.nombre + "." + atributo
+            nombre = e.nombre + "." + evento
 
             tags = []
             tags.append("evento html")
@@ -257,7 +257,7 @@ def doc_eventosHTML(e):
             cabecera = gen_cabecera(nombre,path,clave,tags)
             f.writelines(cabecera)
 
-            info_metodo = gen_infometodo(jsonsource,"eventos",atributo)
+            info_metodo = gen_infometodo(jsonsource,"eventos",evento)
             f.writelines(info_metodo)
 
             descripcion = gen_descripcion("_dato")
