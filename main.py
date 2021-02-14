@@ -71,12 +71,19 @@ def todos_los_elementos():
     
     print ("Hay " + str(len(eventos)) + " Eventos")
 
+    lista_eventos = []
+
     for evento in eventos:        
         tipo_evento = limpiar(evento.find_next("td").text)
         if tipo_evento != "body":
+            lista_eventos.append(limpiar(evento.text))
             print (limpiar(evento.text))
 
+    writer.doc_eventosHTML_generales(lista_eventos)
 
+
+
+# Inicio del Programa
 print ("Analizando la documentación HTML")
 todos_los_elementos()
 

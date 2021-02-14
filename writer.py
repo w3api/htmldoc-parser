@@ -315,6 +315,45 @@ def doc_atributosHTML_generales():
 
             f.close()
 
+def doc_eventosHTML_generales(eventos):
+
+    for evento in eventos:
+
+            basepath = evento
+
+            if not os.path.exists(__OUT__ + basepath[0] + "/" + basepath + "/"):
+                os.makedirs(__OUT__ + basepath[0] + "/" + basepath + "/")
+
+            f = open(__OUT__ + basepath[0] + "/" + basepath + "/2021-01-01-" + basepath + ".md","w")
+            clave = "HTML."+basepath[0]+"."+basepath 
+            path = "/html/"+basepath.replace(".","/") + "/" 
+            jsonsource = "HTML."+basepath[0]+"."+basepath.replace(".","")  # Las base JSON compuestas se accede sin punto
+            nombre = basepath
+
+            tags = []
+            tags.append("evento html")
+            
+            cabecera = gen_cabecera(nombre,path,clave,tags)
+            f.writelines(cabecera)
+
+            info_metodo = gen_infometodo(jsonsource,"atributos",evento)
+            f.writelines(info_metodo)
+
+            descripcion = gen_descripcion("_dato")
+            f.writelines(descripcion)
+
+            sintaxis = gen_sintaxis("")
+            f.writelines(sintaxis)
+
+            ejemplo = gen_ejemplo("_dato")
+            f.writelines(ejemplo)
+
+            ldc = gen_ldc("_dato")
+            f.writelines(ldc)
+
+            f.close()
+
+
 
 def doc_elementoHTML(e):
 
