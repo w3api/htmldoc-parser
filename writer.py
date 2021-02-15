@@ -3,96 +3,66 @@ import os, html, json
 
 
 __OUT__ = "/Users/victor/GitHub/w3api-dev/_posts/html/"
-__OUTJSON__ = "/Users/victor/GitHub/w3api-dev/_data/html/"
+__OUTJSON__ = "/Users/victor/GitHub/w3api-dev/_data/HTML/"
 __atributosGlobales__ = ['accesskey','autocapitalize','autofocus','contenteditable','dir','draggable','enterkeyhint','hidden','inputmode','is','itemid','itemprop','itemref','itemscope','itemtype','lang','nonce','spellcheck','style','tabindex','title','translate']
 
-def doc_JSON(clase,duplicada):
+def doc_JSON(elemento):
 
-    # Control de clases duplicadas
-    if duplicada:
-        basepath = clase.nombre  + "-" +  clase.paquete.replace(".","-")
-    else:
-        basepath = clase.nombre
+    basepath = elemento.nombre
 
-    if not os.path.exists(__OUTJSON__ + clase.nombre[0]):
-        os.makedirs(__OUTJSON__ + clase.nombre[0])
+    if not os.path.exists(__OUTJSON__ + elemento.nombre[0]):
+        os.makedirs(__OUTJSON__ + elemento.nombre[0])
 
     # Clases como AbstractDocument.AttributeContext se generan en un directorio
-    f = open(__OUTJSON__ + clase.nombre[0] + "/" + basepath + ".json","w")
+    f = open(__OUTJSON__ + elemento.nombre[0] + "/" + basepath + ".json","w")
 
     data_json = {}
     data_json["description"] = ""
     data_json["code"] = ""
     data_json["ldc"] = []
 
-    if clase.constructores:
-        c = []
-        for constructor in clase.constructores:
-            constructor_json = {}
-            constructor_json["nombre"] = constructor.nombre
-            constructor_json["description"] = ""
-            if constructor.parametros:
-                p = []
-                for parametro in constructor.parametros:
-                    parametro_json = {}
-                    parametro_json["nombre"] = parametro
-                    parametro_json["description"] = ""
-                    p.append(parametro_json)
-                constructor_json["parametros"] = p
+    if elemento.atributos:
+        a = []
+        for atributo in elemento.atributos:
+            atributo_json = {}
+            atributo_json["nombre"] = atributo
+            atributo_json["description"] = ""
+            atributo_json["code"] = ""
+            atributo_json["ldc"] = []
+            a.append(atributo_json)
+        data_json["atributos"] = a
 
-            c.append(constructor_json)
-        data_json["constructores"] = c
-
-    if clase.metodos:
-        m = []
-        for metodo in clase.metodos:
-            metodo_json = {}
-            metodo_json["nombre"] = metodo.nombre
-            metodo_json["description"] = ""
-            if metodo.parametros:
-                p = []
-                for parametro in metodo.parametros:
-                    parametro_json = {}
-                    parametro_json["nombre"] = parametro
-                    parametro_json["description"] = ""
-                    p.append(parametro_json)
-                metodo_json["parametros"] = p
-
-            m.append(metodo_json)
-        data_json["metodos"] = m
-
-    if clase.campos:
-        cp = []
-        for campo in clase.campos:
-            campo_json = {}
-            campo_json["nombre"] = campo.nombre
-            campo_json["description"] = ""
-            cp.append(campo_json)
-        data_json["campos"] = cp
-
-    if clase.enumerados:
-        e = []
-        for enumerado in clase.enumerados:
-            enumerado_json = {}
-            enumerado_json["nombre"] = enumerado.nombre
-            enumerado_json["description"] = ""
-            e.append(enumerado_json)
-        data_json["enumerados"] = e
-
-    if clase.elementos:
-        el = []
-        for elemento in clase.elementos:
-            elemento_json = {}
-            elemento_json["nombre"] = elemento.nombre
-            elemento_json["description"] = ""
-            el.append(elemento_json)
-        data_json["elementos"] = el
+    if elemento.eventos:
+        ev = []
+        for atributo in elemento.eventos:
+            evento_json = {}
+            evento_json["nombre"] = atributo
+            evento_json["description"] = ""
+            evento_json["code"] = ""
+            evento_json["ldc"] = []
+            ev.append(evento_json)
+        data_json["eventos"] = ev
 
     f.write(json.dumps(data_json,indent=4))
     f.close()
 
+def doc_JSON_Globales(nombre):
 
+    basepath = nombre
 
+    if not os.path.exists(__OUTJSON__ + nombre[0]):
+        os.makedirs(__OUTJSON__ + nombre[0])
+
+    # Clases como AbstractDocument.AttributeContext se generan en un directorio
+    f = open(__OUTJSON__ + nombre[0] + "/" + basepath + ".json","w")
+
+    data_json = {}
+    data_json["description"] = ""
+    data_json["code"] = ""
+    data_json["ldc"] = []
+
+    f.write(json.dumps(data_json,indent=4))
+    f.close()
 
 ## Genera los ficheros desde una clase
 def gen_cabecera(nombre,path,clave,tags):
@@ -298,22 +268,21 @@ def doc_atributosHTML_generales():
             cabecera = gen_cabecera(nombre,path,clave,tags)
             f.writelines(cabecera)
 
-            info_metodo = gen_infometodo(jsonsource,"atributos",atributo)
-            f.writelines(info_metodo)
-
-            descripcion = gen_descripcion("_dato")
+            descripcion = gen_descripcion("site.data." + jsonsource)
             f.writelines(descripcion)
 
             sintaxis = gen_sintaxis("")
             f.writelines(sintaxis)
 
-            ejemplo = gen_ejemplo("_dato")
+            ejemplo = gen_ejemplo("site.data." + jsonsource)
             f.writelines(ejemplo)
 
-            ldc = gen_ldc("_dato")
+            ldc = gen_ldc("site.data." + jsonsource)
             f.writelines(ldc)
 
             f.close()
+
+            doc_JSON_Globales(atributo)
 
 def doc_eventosHTML_generales(eventos):
 
@@ -336,23 +305,21 @@ def doc_eventosHTML_generales(eventos):
             cabecera = gen_cabecera(nombre,path,clave,tags)
             f.writelines(cabecera)
 
-            info_metodo = gen_infometodo(jsonsource,"atributos",evento)
-            f.writelines(info_metodo)
-
-            descripcion = gen_descripcion("_dato")
+            descripcion = gen_descripcion("site.data." + jsonsource)
             f.writelines(descripcion)
 
             sintaxis = gen_sintaxis("")
             f.writelines(sintaxis)
 
-            ejemplo = gen_ejemplo("_dato")
+            ejemplo = gen_ejemplo("site.data." + jsonsource)
             f.writelines(ejemplo)
 
-            ldc = gen_ldc("_dato")
+            ldc = gen_ldc("site.data." + jsonsource)
             f.writelines(ldc)
 
             f.close()
 
+            doc_JSON_Globales(evento)
 
 
 def doc_elementoHTML(e):
@@ -410,4 +377,4 @@ def doc_elementoHTML(e):
     if e.eventos:
         doc_eventosHTML(e)
 
-   #doc_JSON(clase,duplicada)
+    doc_JSON(e)
